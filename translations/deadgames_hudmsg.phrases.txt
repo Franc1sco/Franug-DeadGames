@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"People in DM"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"People on DM! CTs: %i Ts: %i - Type !godm to go"
+		"es"		"Gente en DM! CTs: {1} Ts: {2} - Escribe !godm para unirte"
+	}
+	"People in BHOP"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"People on BHOP! CTs: %i Ts: %i - Type !gobhop to go"
+		"es"		"Gente en BHOP! CTs: {1} Ts: {2} - Escribe !gobhop para unirte"
+	}
+}

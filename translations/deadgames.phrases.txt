@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"Now you go to DM"
+	{
+		"en"		"Now you go to DM."
+		"es"		"Ahora iras a la zona de DM."
+	}
+	"You cant go to DM now."
+	{
+		"en"		"You cant go to DM now."
+		"es"		"No puedes ir a la zona de DM ahora."
+	}
+	"Now you go to BHOP"
+	{
+		"en"		"Now you go to BHOP."
+		"es"		"Ahora iras a la zona de BHOP."
+	}
+	"You cant go to BHOP now."
+	{
+		"en"		"You cant go to BHOP now."
+		"es"		"No puedes ir a la zona de BHOP ahora."
+	}
+	"Type !nodm for exit dm zone and !godm for join again."
+	{
+		"en"		"Type !nodm for exit dm zone and !godm for join again."
+		"es"		"Escribe !nodm para salir de la zona de dm y !godm para entrar otra vez."
+	}
+	"Type !nobhop for exit dm zone and !gobhop for join again."
+	{
+		"en"		"Type !nobhop for exit dm zone and !gobhop for join again."
+		"es"		"Escribe !nobhop para salir de la zona de bhop y !gobhop para entrar otra vez."
+	}
+	"Dont bother to the alive people!"
+	{
+		"en"		"Dont bother to the alive people!"
+		"en"		"No molestes a los vivos!"
+	}
+	"On a dead game you cant write for prevent to be readed by alive people"
+	{
+		"en"		"On a dead game you cant write for prevent to be readed by alive people!"
+		"en"		"En DM no puedes escribir para que no te lean los vivos!"
+	}
+}

@@ -1,0 +1,16 @@
+"Phrases"
+{
+  "Spawn Protection Start"
+  {
+    "#format"		"{1:d}"
+		"en"  "You will be spawn protected for {lightgreen}{1}{default} seconds."  
+  }
+  "Spawn Protection End Normal"
+  {
+		"en"  "You are no longer spawn protected."
+  }
+  "Spawn Protection End Attack"
+  {
+    "en" "You have fired a weapon and are no longer spawn protected."
+  }
+}
