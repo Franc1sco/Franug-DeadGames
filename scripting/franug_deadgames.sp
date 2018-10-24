@@ -152,6 +152,7 @@ public void OnPluginStart()
 
 public Action OnClientSayCommand(int client, const char[] command, const char[] sArgs)
 {
+	// block chat commands from people on dead games because if not the alive people will see it
 	if(client > 0 && g_bDeadGame[client] && IsPlayerAlive(client))
 	{
 		PrintToChat(client, " \x04%T", "On a dead game you cant write for prevent to be readed by alive people", client);
@@ -272,6 +273,7 @@ public Action Command_dm(int client, int args)
 				g_bDeadGameDM[client] = true; 
 				g_bDeadGame[client] = true; 
 				
+				// mute player on dead games zone (admins have inmunity)
 				if(!BaseComm_IsClientMuted(client) && !GetAdminFlag(GetUserAdmin(client), Admin_Chat))
 					SetClientListeningFlags(client, VOICE_MUTED);
 					

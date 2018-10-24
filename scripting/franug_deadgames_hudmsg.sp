@@ -4,7 +4,7 @@
 #include <cstrike>
 #include <franug_deadgames>
 
-#define PLUGIN_VERSION "6.0"
+#define PLUGIN_VERSION "6.0.1"
 
 // hud msg color
 int iColor[4] =  { 0, 0, 0, 255 };
@@ -80,7 +80,7 @@ public Action Check_Players(Handle timer)
 			{
 				Format(sBuffer, sizeof(sBuffer), "%T", "People in DM", i, g_iCtsInDM, g_iTsInDM);
 	
-				ShowHudText(i, 4, sBuffer);	
+				ShowHudText(i, 5, sBuffer);	
 			}
 	}
 }
