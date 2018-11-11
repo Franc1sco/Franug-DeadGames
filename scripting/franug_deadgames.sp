@@ -28,7 +28,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_VERSION "6.0.1"
+#define PLUGIN_VERSION "6.0.2"
 
 bool g_bDeadGame[MAXPLAYERS+1] = {false, ...};
 bool g_bDeadGameDM[MAXPLAYERS+1] = {false, ...};
@@ -63,7 +63,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("DeadGames_IsOnGame", Native_IsOnGame);
 	
 	// compatibility for old 3party plugins
-	CreateNative("DM_isdm", Native_IsOnDm);
+	CreateNative("DM_isdm", Native_IsOnGame);
 	CreateNative("DM_isbhop", Native_IsOnBhop);
 	
 	// optional natives of others plugins
