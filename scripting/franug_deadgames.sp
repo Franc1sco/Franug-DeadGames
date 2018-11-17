@@ -242,7 +242,7 @@ public void OnClientDisconnect_Post(int client)
 
 public Action Command_nodm(int client, int args)
 {
-	if(g_bDeadGameDM[client] && g_bDeadGameDM[client])
+	if(g_bDeadGameDM[client])
 	{
 		SafeKill(client);
 		
@@ -287,7 +287,7 @@ public Action Command_dm(int client, int args)
 
 public Action Command_nobhop(int client, int args)
 {
-	if(g_bDeadGame[client] && g_bDeadGameBhop[client])
+	if(g_bDeadGameBhop[client])
 	{
 		SafeKill(client);
 		
