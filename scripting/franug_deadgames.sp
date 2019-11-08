@@ -1,6 +1,6 @@
 /*  SM Franug Games for dead people
  *
- *  Copyright (C) 2017-2018 Francisco 'Franc1sco' García
+ *  Copyright (C) 2017-2019 Francisco 'Franc1sco' García
  * 
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -28,7 +28,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_VERSION "6.0.3"
+#define PLUGIN_VERSION "6.1"
 
 bool g_bDeadGame[MAXPLAYERS+1] = {false, ...};
 bool g_bDeadGameDM[MAXPLAYERS+1] = {false, ...};
@@ -39,7 +39,7 @@ int g_offsCollisionGroup;
 
 int g_iOffset_PlayerResource_Alive = -1;
 
-ConVar cv_MapWithDMZone;
+ConVar cv_MapWithDMZone, cv_useDevZones;
 
 ConVar cv_lr;
 
@@ -117,6 +117,8 @@ public void OnPluginStart()
 	CreateConVar("sm_franugdeadgames_version", PLUGIN_VERSION, "", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
 	
 	cv_MapWithDMZone = CreateConVar("sm_franugdeadgames_mapwithdmzone", "0", "This cvar is used for maps that have a separated dm zone with weapons for dead people.");
+	
+	cv_useDevZones = CreateConVar("sm_franugdeadgames_usedevzones", "1", "1 = Use devzones for set the spawn points of dm people and the area. 1 = allow people to run freely in the map like redie (if you dont have devzones installed is like have this cvar to 0).");
 	
 	g_offsCollisionGroup = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 	
@@ -265,8 +267,11 @@ public Action Command_dm(int client, int args)
 		return Plugin_Handled;
 		
 	// if no dm zone created then return
-	float Position[3];
-	if(!Zone_GetZonePosition("dmzone", false, Position)) return Plugin_Handled;
+	if(GetFeatureStatus(FeatureType_Native, "Zone_GetZonePosition") == FeatureStatus_Available && cv_useDevZones.BoolValue)
+	{
+		float Position[3];
+		if(!Zone_GetZonePosition("dmzone", false, Position)) return Plugin_Handled;
+	}
 		
 	if (!g_bClosed && !IsPlayerAlive(client) && !g_bDeadGame[client])
 	{
@@ -309,9 +314,12 @@ public Action Command_bhop(int client,int args)
 		return Plugin_Handled;
 		
 	// if no bhop zone created then return
-	float Position[3];
-	if(!Zone_GetZonePosition("bhopzone", false, Position)) return Plugin_Handled;
-		
+	if(GetFeatureStatus(FeatureType_Native, "Zone_GetZonePosition") == FeatureStatus_Available && cv_useDevZones.BoolValue)
+	{
+		float Position[3];
+		if(!Zone_GetZonePosition("bhopzone", false, Position)) return Plugin_Handled;
+	}
+	
 	if (!g_bClosed && !IsPlayerAlive(client) && !g_bDeadGame[client])
 	{
 		g_bDeadGame[client] = true;
@@ -397,10 +405,12 @@ void CheckDeadPeople()
 public Action Event_PlayerDeath(Handle event, const char[] name, bool dontBroadcast)
 {
 	// if not dead zones created then dont continue
-	float Position[3];
-	if(!Zone_GetZonePosition("dmzone", false, Position) && !Zone_GetZonePosition("bhopzone", false, Position)) 
-		return Plugin_Continue;
-	
+	if(GetFeatureStatus(FeatureType_Native, "Zone_GetZonePosition") == FeatureStatus_Available && cv_useDevZones.BoolValue)
+	{
+		float Position[3];
+		if(!Zone_GetZonePosition("dmzone", false, Position) && !Zone_GetZonePosition("bhopzone", false, Position)) 
+			return Plugin_Continue;
+	}
 	// respawn on dead zone in X seconds
 	int victim = GetClientOfUserId(GetEventInt(event, "userid"));
 	if(g_bDeadGame[victim])
@@ -480,11 +490,14 @@ public Action Timer_RespawnOnDG(Handle timer,int userid)
 				GivePlayerItem(client, "weapon_knife");
 			}
 			
-			// teleport player to the dead game zone
-			if(g_bDeadGameBhop[client] && Zone_GetZonePosition("bhop1", false, Position)) 
-				TeleportEntity(client, Position, NULL_VECTOR, NULL_VECTOR);
-			else if(Zone_GetZonePosition("dm1", false, Position)) 
-				TeleportEntity(client, Position, NULL_VECTOR, NULL_VECTOR);
+			if(GetFeatureStatus(FeatureType_Native, "Zone_GetZonePosition") == FeatureStatus_Available && cv_useDevZones.BoolValue)
+			{
+				// teleport player to the dead game zone
+				if(g_bDeadGameBhop[client] && Zone_GetZonePosition("bhop1", false, Position)) 
+					TeleportEntity(client, Position, NULL_VECTOR, NULL_VECTOR);
+				else if(Zone_GetZonePosition("dm1", false, Position)) 
+					TeleportEntity(client, Position, NULL_VECTOR, NULL_VECTOR);
+			}
 			
 			g_bNoWeapons[client] = true;
 		}
@@ -498,12 +511,14 @@ public Action Timer_RespawnOnDG(Handle timer,int userid)
 				GivePlayerItem(client, "weapon_knife");
 			}
 			
-			// teleport player to the dead game zone
-			if(g_bDeadGameBhop[client] && Zone_GetZonePosition("bhop2", false, Position)) 
-				TeleportEntity(client, Position, NULL_VECTOR, NULL_VECTOR);
-			else if(Zone_GetZonePosition("dm2", false, Position)) 
-				TeleportEntity(client, Position, NULL_VECTOR, NULL_VECTOR);
-			
+			if(GetFeatureStatus(FeatureType_Native, "Zone_GetZonePosition") == FeatureStatus_Available && cv_useDevZones.BoolValue)
+			{
+				// teleport player to the dead game zone
+				if(g_bDeadGameBhop[client] && Zone_GetZonePosition("bhop2", false, Position)) 
+					TeleportEntity(client, Position, NULL_VECTOR, NULL_VECTOR);
+				else if(Zone_GetZonePosition("dm2", false, Position)) 
+					TeleportEntity(client, Position, NULL_VECTOR, NULL_VECTOR);
+			}
 			g_bNoWeapons[client] = true;
 		}
 		
@@ -550,7 +565,7 @@ public Action Event_RoundStart(Handle event, const char[] name, bool dontBroadca
 
 public int Zone_OnClientLeave(int client, char[] zone)
 {
-	if(IsValidClient(client) && g_bDeadGame[client] && !g_bClosed)
+	if(IsValidClient(client) && g_bDeadGame[client] && !g_bClosed && cv_useDevZones.BoolValue)
 	{
 		// prevent people to go out from dead zone in order to dont bother alive people
 		if(g_bDeadGameDM[client] && StrContains(zone, "dmzone", false) == 0)
@@ -588,7 +603,7 @@ public int Zone_OnClientLeave(int client, char[] zone)
 public int Zone_OnClientEntry(int client, char[] zone)
 {
 	// prevent people to go to a banned zone for "dead players"
-	if(IsValidClient(client) && g_bDeadGame[client] && !g_bClosed)
+	if(IsValidClient(client) && g_bDeadGame[client] && !g_bClosed && cv_useDevZones.BoolValue)
 	{
 		if(g_bDeadGameDM[client] && StrContains(zone, "nodead", false) == 0)
 		{
