@@ -4,13 +4,16 @@
   {
     "#format"		"{1:d}"
 		"en"  "You will be spawn protected for {lightgreen}{1}{default} seconds."  
+		"ru"  "Защита при возрождении на {lightgreen}{1}{default} сек."
   }
   "Spawn Protection End Normal"
   {
 		"en"  "You are no longer spawn protected."
+		"ru"  "Защита при возрождении окончена."
   }
   "Spawn Protection End Attack"
   {
     "en" "You have fired a weapon and are no longer spawn protected."
+    "ru" "Вы выстрелили из оружия и больше не имеете защиту при возрождении."
   }
 }
